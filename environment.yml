@@ -1,7 +1,0 @@
-ependencies:
-  - matplotlib
-  - numpy
-  - pandas
-  - requests
-  - IPython
-  - math
