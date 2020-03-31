@@ -4,3 +4,4 @@ ependencies:
   - pandas
   - requests
   - IPython
+  - math
