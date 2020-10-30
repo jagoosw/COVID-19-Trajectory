@@ -41,13 +41,13 @@ def animate(i):
 	return plt_list
 
 ###**** Settings ***
-num_days = 5 #The number of days the new cases are counted over
+num_days = 3 #The number of days the new cases are counted over
 all_places = False #Show all the places in the world
 show_quarantine = True #Show the days that lockdowns started in the contries set below
 show_legend = True #Show the legend (unhelpful for lots of contries)
-selection = ["United Kingdom", "China", "Japan","South Korea","United States","Spain","Italy","Austria"] #The contries you want to see if not all
+selection = ["United Kingdom", "South Korea","United States","Spain","Italy","Austria","India","Sweden"] #The contries you want to see if not all
 quarantines= {"2020-03-26":"United Kingdom", "2020-01-27":"China","2020-02-22":"South Korea","2020-03-10":"Italy","2020-03-19":"Austria"} #The days lockdown started in different contries
-use_deaths = False #Use deaths or cases data (deaths is less smooth)
+use_deaths = True #Use deaths or cases data (deaths is less smooth)
 save_gif = False #Save as a gif (don't show animation)
 
 # Settings end
@@ -105,6 +105,8 @@ for place in list(data.keys()):
 
 data_week = dict()
 totals_week = dict()
+y_week = dict()
+ys_week = dict()
 for place in list(data.keys()):
 	line = data[place]
 	week = list()
@@ -128,6 +130,29 @@ for place in list(data.keys()):
 		c+=num_days
 	totals_week[place]=week
 
+for place in list(data.keys()):
+	line = data[place]
+	week = list()
+	week = [line[0],line[0]+line[1],line[0]+line[1]+line[2],line[0]+line[1]+line[2]+line[3]]
+	c=num_days*2
+	while c<len(line):
+		n = 0
+		add = 0
+		while n<num_days:
+			add+=line[c-n]
+			n+=1
+		c+=1
+		week.append(add)
+	y_week[place]=week
+
+	total = totals[place]
+	week = list()
+	c=0
+	while c<len(line):
+		week.append(line[c])
+		c+=num_days
+	ys_week[place]=week
+
 quarantines_tmp=dict()
 for d in list(quarantines.keys()):
     quarantines_tmp[dates.index(d)]=quarantines[d]
@@ -135,9 +160,9 @@ for d in list(quarantines.keys()):
 quarantines = quarantines_tmp
 
 fig = plt.figure(figsize=(18,10))
-plt.xlabel("Total cases",fontsize=20)
-plt.ylabel("New cases (in the last %s days)"%num_days,fontsize=20)
-plt.title("Trajectory of COVID-19 cases %s"%dates[-1],fontsize=20)
+plt.xlabel("Total %s"%choice,fontsize=20)
+plt.ylabel("New %s (in the last %s days)"%(choice,num_days),fontsize=20)
+plt.title("Trajectory of COVID-19 %s %s"%(choice,dates[-1]),fontsize=20)
 
 ax = fig.add_subplot(111)
 ax.set_yscale('log')
@@ -162,8 +187,8 @@ for contry in selection:
 		if contry_max_x > max_x:
 			max_x = contry_max_x
 
-min_x = 60
-min_y = 8
+min_x = 10
+min_y = 1
 plt.xlim(left=min_x)
 plt.ylim(bottom=min_y)
 plt.xlim(right=max_x+100000)
@@ -171,7 +196,8 @@ plt.ylim(top=max_y+10000)
 
 ann_list = []
 plt_list = []
-
+if num_days == 1:
+	data_week = data
 for i in selection:
 	#color="grey",
 	lobj = ax.plot([],[],lw=1, label=i)[0]
@@ -201,3 +227,5 @@ if show_quarantine == True:
     plt.text(0.95, 0.03,'Red dot shows the \nstart of lockdowns', horizontalalignment='center', verticalalignment='center', transform = ax.transAxes)
 
 plt.show()
+print("Max Italy:",max(data_week["Italy"]))
+print("Max UK:",max(data_week["United Kingdom"]))
