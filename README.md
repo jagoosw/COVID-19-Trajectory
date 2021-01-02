@@ -1,4 +1,7 @@
 # COVID-19-Trajectory
+## Use [V3](https://github.com/jagoosw/COVID-19-Trajectory/blob/master/V3.ipynb)
+Plotting of twitter hashtags on top is also available at [V3-Twitter](https://github.com/jagoosw/COVID-19-Trajectory/blob/master/V3.ipynb) although I don't think it shows a correlation (various anti lockdown hashtags are up at the bottom of upward trends but I think thats probably just when talk of lockdowns etc is up in general).
+
 I have made some graphs to show the trajectory of COVID 19. 
 
 This project makes graphs showing the trajectory of COVID-19 around the world (such as the one below).
